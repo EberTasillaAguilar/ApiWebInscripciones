@@ -1,0 +1,6 @@
+@APIIncripccionesChota_HostAddress = http://localhost:5282
+
+GET {{APIIncripccionesChota_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
