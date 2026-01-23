@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using APIInscripcionesChota.Models;
+using Microsoft.EntityFrameworkCore;
 namespace APIIncripccionesChota.Data
 
 {
@@ -7,38 +8,47 @@ namespace APIIncripccionesChota.Data
         public BD_Context(DbContextOptions<BD_Context> options): base(options) { 
         }
         // Definición de las tablas
+        public DbSet<Postulante> Postulantes { get; set; }
+        public DbSet<Administrativo> Administrativos { get; set; }
         public DbSet<Pago> Pagos { get; set; }
-        public DbSet<Pre> PregradoCertificados { get; set; }
-        public DbSet<Pago> CentroIdiomas { get; set; }
-        public DbSet<Pago> PregradoTasas { get; set; }
-        public DbSet<Pago> Cepunc { get; set; }
+        public DbSet<Tarifa> Tarifas { get; set; }
+        public DbSet<Carrera> Carreras { get; set; }
+        public DbSet<Usuario_Rol> Usuario_Roles { get; set; }
 
-        // Configuración del modelo, opcionalmente se puede hacer con Fluent API
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configuración para la tabla de 'Pagos'
+            // Relación Pago -> Tarifa (1:N)
             modelBuilder.Entity<Pago>()
-                .ToTable("Pagos");
+                .HasOne(p => p.Tarifa)
+                .WithMany(t => t.Pagos)
+                .HasForeignKey(p => p.Id_Tarifa);
 
-            // Configuración de los otros tipos de pagos si es necesario
-            modelBuilder.Entity<Pago>()
-                .ToTable("PregradoCertificados");
+            // Postulante -> Carrera
+            modelBuilder.Entity<Postulante>()
+                .HasOne(p => p.Carrera)
+                .WithMany(c => c.Postulantes)
+                .HasForeignKey(p => p.Id_Carrera);
 
-            modelBuilder.Entity<Pago>()
-                .ToTable("CentroIdiomas");
+            modelBuilder.Entity<Usuario_Rol>()
+               .HasOne(ur => ur.Postulante)      
+               .WithOne(p => p.Usuario_Rol)      
+               .HasForeignKey<Postulante>(p => p.Id_Usuario_Rol) 
+               .IsRequired(false);
 
-            modelBuilder.Entity<Pago>()
-                .ToTable("PregradoTasas");
+            // Usuario_Rol <-> Administrativo (1:1 opcional)
+            modelBuilder.Entity<Usuario_Rol>()
+                .HasOne(ur => ur.Administrativo)
+                .WithOne(a => a.UsuarioRol)
+                .HasForeignKey<Administrativo>(a => a.Id_Usuario_Rol)
+                .IsRequired(false);
 
-            modelBuilder.Entity<Pago>()
-                .ToTable("Cepunc");
-
-            // Si deseas relaciones más complejas, podrías hacer algo similar
-            // ejemplo, si se tuvieran otras relaciones entre las tablas:
-            // modelBuilder.Entity<Pago>()
-            //    .HasOne(o => o.AlgunaOtraEntidad)
-            //    .WithMany()
-            //    .HasForeignKey(f => f.AlgunaClaveForanea);
+            // Postulante -> Pago (opcional)
+            modelBuilder.Entity<Postulante>()
+                .HasOne(p => p.Pago)
+                .WithMany()
+                .HasForeignKey(p => p.Id_Pago)
+                .IsRequired(false);
         }
+
     }
 }
