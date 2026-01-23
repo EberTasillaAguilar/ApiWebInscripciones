@@ -1,5 +1,6 @@
 ﻿using APIInscripcionesChota.Dtos;
 using APIInscripcionesChota.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APIInscripcionesChota.Controllers
@@ -21,7 +22,7 @@ namespace APIInscripcionesChota.Controllers
             var result = await _auth.Register(dto);
             return Ok(new { message = result });
         }
-
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
