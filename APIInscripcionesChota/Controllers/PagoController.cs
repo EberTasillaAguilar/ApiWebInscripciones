@@ -1,83 +1,27 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace APIInscripcionesChota.Controllers
 {
-    public class PagoController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PagoController : ControllerBase
     {
-        // GET: PagoController
-        public ActionResult Index()
+        [HttpGet]
+        public IActionResult Get()
         {
-            return View();
+            return Ok("Listado de pagos");
         }
 
-        // GET: PagoController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
         {
-            return View();
+            return Ok($"Pago {id}");
         }
 
-        // GET: PagoController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: PagoController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult Create()
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: PagoController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: PagoController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: PagoController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: PagoController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return Ok("Pago creado");
         }
     }
 }
